@@ -16,7 +16,9 @@ export interface OZCalendarPluginSettings {
 	yamlKey: string;
 	dateFormat: string;
 	defaultFolder: string;
+	dailyFolder: string;
 	defaultFileNamePrefix: string;
+	dailyNameFormat: string;
 	fixedCalendar: boolean;
 	showDestinationFolderDuringCreate: boolean;
 	allowSlashhDuringCreate: boolean;
@@ -34,7 +36,9 @@ export const DEFAULT_SETTINGS: OZCalendarPluginSettings = {
 	yamlKey: 'created',
 	dateFormat: 'YYYY-MM-DD hh:mm:ss',
 	defaultFolder: '/',
+	dailyFolder: '/',
 	defaultFileNamePrefix: 'YYYY-MM-DD',
+	dailyNameFormat: 'DD MMMM YYYY',
 	fixedCalendar: true,
 	showDestinationFolderDuringCreate: true,
 	allowSlashhDuringCreate: false,
@@ -359,5 +363,50 @@ export class OZCalendarPluginSettingsTab extends PluginSettingTab {
 						this.plugin.calendarForceUpdate();
 					});
 			});
+
+
+
+
+
+
+
+
+
+
+			containerEl.createEl('h2', { text: 'Daily Note Settings' });
+
+			containerEl.createEl('p', {
+				text: `
+				Select daily note options
+			`,
+				cls: 'setting-item-description',
+			});
+	
+			new Setting(containerEl)
+			.setName('Daily note folder')
+			.setDesc('Select folder for daily note')
+			.addSearch((cb) => {
+				new FolderSuggest(cb.inputEl);
+				cb.setPlaceholder('Example: folder1/folder2')
+					.setValue(this.plugin.settings.dailyFolder)
+					.onChange((new_folder) => {
+						this.plugin.settings.dailyFolder = new_folder;
+						this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('Daily note date format')
+			.setDesc(
+				'Set the default file name prefix date format for daily notes'
+			)
+			.addText((text) => {
+				text.setValue(this.plugin.settings.dailyNameFormat).onChange((newValue) => {
+					this.plugin.settings.dailyNameFormat = newValue;
+					this.plugin.saveSettings();
+				});
+			});
+
+
 	}
 }

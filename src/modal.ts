@@ -101,14 +101,14 @@ export class CreateNoteModal extends Modal {
 
 			let dateKey = this.plugin.settings.yamlKey
 			let dateSource = this.plugin.settings.dateSource
-			let selectedDate = dayjs(this.destinationDate).format("YYYY-MM-DD")
+			let selectedDate = dayjs(this.destinationDate).format(this.plugin.settings.dateFormat)
 
 
 			let isDaily
 			if (newFileName.trim() == selectedDate) {
 				isDaily = true
-				newFileName = dayjs(selectedDate).format("DD MMMM YYYY")
-				defFolder = this.app.vault.getAbstractFileByPath("База/Ежедневник")
+				newFileName = dayjs(selectedDate).format(this.plugin.settings.dailyNameFormat)
+				defFolder = this.app.vault.getAbstractFileByPath(this.plugin.settings.dailyFolder)
 
 				let localeMonths = {
 					en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], 
