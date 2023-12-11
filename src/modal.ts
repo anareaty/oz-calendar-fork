@@ -102,10 +102,10 @@ export class CreateNoteModal extends Modal {
 			let dateKey = this.plugin.settings.yamlKey
 			let dateSource = this.plugin.settings.dateSource
 			let selectedDate = dayjs(this.destinationDate).format(this.plugin.settings.dateFormat)
-
+			
 
 			let isDaily
-			if (newFileName.trim() == selectedDate) {
+			if (newFileName.trim() == defFileNamePref) {
 				isDaily = true
 				newFileName = dayjs(selectedDate).format(this.plugin.settings.dailyNameFormat)
 				defFolder = this.app.vault.getAbstractFileByPath(this.plugin.settings.dailyFolder)
