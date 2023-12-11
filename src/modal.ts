@@ -74,10 +74,12 @@ export class CreateNoteModal extends Modal {
 			let defFolderSrc = folderInputEl ? folderInputEl.value : this.plugin.settings.defaultFolder;
 			let defFolder = this.app.vault.getAbstractFileByPath(defFolderSrc);
 
-			if (!defFolder || !(defFolder instanceof TFolder)) {
-				new Notice('Folder couldnt be found in the Vault');
-				return;
-			}
+
+
+
+
+
+			/*
 
 			// Default Text Preparation for File with YAML and Date
 			let defaultNewFileText = stripIndents`
@@ -93,6 +95,47 @@ export class CreateNoteModal extends Modal {
 				newFileName,
 				this.plugin.settings.dateSource === 'yaml' ? defaultNewFileText : ''
 			);
+
+
+			*/
+
+			let dateKey = this.plugin.settings.yamlKey
+			let dateSource = this.plugin.settings.dateSource
+			let selectedDate = dayjs(this.destinationDate).format("YYYY-MM-DD")
+
+
+			let isDaily
+			if (newFileName.trim() == selectedDate) {
+				isDaily = true
+				newFileName = dayjs(selectedDate).format("DD MMMM YYYY")
+				defFolder = this.app.vault.getAbstractFileByPath("База/Ежедневник")
+
+				let localeMonths = {
+					en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], 
+					ru: ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+				}
+			
+				for (let month of localeMonths.en) {
+					let index = localeMonths.en.indexOf(month)
+					newFileName = newFileName.replace(month, localeMonths.ru[index])
+				}
+			}
+			
+			if (!defFolder || !(defFolder instanceof TFolder)) {
+				new Notice('Folder couldnt be found in the Vault');
+				return;
+			}
+			
+			await createNewMarkdownFile(
+				this.plugin,
+				defFolder,
+				newFileName,
+				{dateKey, dateSource, selectedDate, isDaily}
+			);
+
+
+
+
 
 			thisModal.close();
 		};

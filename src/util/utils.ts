@@ -18,6 +18,9 @@ export const openFile = (params: {
 	leaf.openFile(file, { eState: { focus: true } });
 };
 
+
+/*
+
 export const createNewMarkdownFile = async (
 	plugin: OZCalendarPlugin,
 	folder: TFolder,
@@ -27,6 +30,36 @@ export const createNewMarkdownFile = async (
 	// @ts-ignore
 	const newFile = await plugin.app.fileManager.createNewMarkdownFile(folder, newFileName);
 	if (content && content !== '') await plugin.app.vault.modify(newFile, content);
+	openFile({ file: newFile, plugin: plugin, newLeaf: false });
+};
+
+
+
+*/
+
+
+export const createNewMarkdownFile = async (
+	plugin: OZCalendarPlugin,
+	folder: TFolder,
+	newFileName: string,
+	dateObject?: any
+) => {
+
+	const {selectedDate, dateSource, dateKey, isDaily} = dateObject
+  
+	// @ts-ignore
+	const newFile = await plugin.app.fileManager.createNewMarkdownFile(folder, newFileName);
+  
+	if (dateSource === "yaml" && !isDaily) {
+		await plugin.app.fileManager.processFrontMatter(newFile, (frontmatter: any) => { 
+		frontmatter[dateKey] = selectedDate
+		})
+	}
+
+
+
+
+
 	openFile({ file: newFile, plugin: plugin, newLeaf: false });
 };
 
